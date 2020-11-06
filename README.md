@@ -11,8 +11,7 @@ $ composer require danialrahimy/meta-laravel
 ### Do this steps
 
 By default, config file path is 
-`/resources/etc/sourcesHtml.json` 
-to change the path, extend Meta.php class and change configPath const.
+`/resources/etc/sourcesHtml.json`
 
 So like this format generate config file
 ```json

@@ -15,10 +15,15 @@ class Meta
 
     /**
      * @return array
+     * @throws MetaException
      */
     protected static function getMetaConfig() : array
     {
         $path = base_path() . self::configPath;
+
+        if (!file_exists($path))
+            throw new MetaException("config file not found in " . $path);
+
         $data = file_get_contents($path);
         $data = json_decode($data, true);
 
@@ -32,6 +37,7 @@ class Meta
      * @param string $type
      * @param string $id
      * @return string
+     * @throws MetaException
      */
     public static function get(string $type, string $id) : string
     {
@@ -45,6 +51,7 @@ class Meta
      * @param string $type
      * @param string $id
      * @return string
+     * @throws MetaException
      */
     public static function getCss(string $type, string $id)
     {
@@ -57,7 +64,7 @@ class Meta
             if ($version === "dev")
                 $css = self::getCssMetaDev($data, $type, $id);
             else
-                $css = self::getCssMetaProd($data, $type, $id);
+                $css = self::getCssMetaProd($type, $id);
         }
 
         return $css;
@@ -67,6 +74,7 @@ class Meta
      * @param string $type
      * @param string $id
      * @return string
+     * @throws MetaException
      */
     public static function getJs(string $type, string $id)
     {
@@ -79,7 +87,7 @@ class Meta
             if ($version === "dev")
                 $js = self::getJsMetaDev($data, $type, $id);
             else
-                $js = self::getJsMetaProd($data, $type, $id);
+                $js = self::getJsMetaProd($type, $id);
         }
 
         return $js;
@@ -104,16 +112,13 @@ class Meta
     }
 
     /**
-     * @param array $data
      * @param string $type
      * @param string $id
      * @return string
      */
-    protected static function getCssMetaProd(array $data, string $type, string $id) : string
+    protected static function getCssMetaProd(string $type, string $id) : string
     {
-        $css =  "<link href='/css/{$type}/{$id}.css' rel='stylesheet'>" . PHP_EOL;;
-
-        return $css;
+        return "<link href='/css/{$type}/{$id}.css' rel='stylesheet'>" . PHP_EOL;
     }
 
     /**
@@ -135,15 +140,12 @@ class Meta
     }
 
     /**
-     * @param array $data
      * @param string $type
      * @param string $id
      * @return string
      */
-    protected static function getJsMetaProd(array $data, string $type, string $id) : string
+    protected static function getJsMetaProd(string $type, string $id) : string
     {
-        $js = "<script src='/js/{$type}/{$id}.js' rel='script'></script>" . PHP_EOL;
-
-        return $js;
+        return "<script src='/js/{$type}/{$id}.js' rel='script'></script>" . PHP_EOL;
     }
 }
