@@ -140,3 +140,25 @@ To describe config file there are two main key:
 >>> To hint, if your project is a website you can use main categories to separate application to parts (admin, client)
 > and use sub category to separate each page
 
+### Use in blade files
+
+get js file
+
+client category, home subcategory
+```blade
+    <?= \Danialrahimy\MetaLaravel\Meta::getJs("client", "home") ?>
+```
+
+get css file
+
+client category, home subcategory
+```blade
+    <?= \Danialrahimy\MetaLaravel\Meta::getCss("client", "home") ?>
+```
+
+get css and js together, in order css first 
+
+client category, home subcategory
+```blade
+    <?= \Danialrahimy\MetaLaravel\Meta::get("client", "home") ?>
+```
