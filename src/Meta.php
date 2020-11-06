@@ -11,12 +11,14 @@ namespace Danialrahimy\MetaLaravel;
 
 class Meta
 {
+    const configPath = "/resources/etc/sourcesHtml.json";
+
     /**
      * @return array
      */
-    private static function getMetaConfig() : array
+    protected static function getMetaConfig() : array
     {
-        $path = base_path() . "/resources/etc/sourcesHtml.json";
+        $path = base_path() . self::configPath;
         $data = file_get_contents($path);
         $data = json_decode($data, true);
 
@@ -89,7 +91,7 @@ class Meta
      * @param string $id
      * @return string
      */
-    private static function getCssMetaDev(array $data, string $type, string $id) : string
+    protected static function getCssMetaDev(array $data, string $type, string $id) : string
     {
         $css = "";
 
@@ -107,7 +109,7 @@ class Meta
      * @param string $id
      * @return string
      */
-    private static function getCssMetaProd(array $data, string $type, string $id) : string
+    protected static function getCssMetaProd(array $data, string $type, string $id) : string
     {
         $css =  "<link href='/css/{$type}/{$id}.css' rel='stylesheet'>" . PHP_EOL;;
 
@@ -120,7 +122,7 @@ class Meta
      * @param string $id
      * @return string
      */
-    private static function getJsMetaDev(array $data, string $type, string $id) : string
+    protected static function getJsMetaDev(array $data, string $type, string $id) : string
     {
         $js = "";
 
@@ -138,7 +140,7 @@ class Meta
      * @param string $id
      * @return string
      */
-    private static function getJsMetaProd(array $data, string $type, string $id) : string
+    protected static function getJsMetaProd(array $data, string $type, string $id) : string
     {
         $js = "<script src='/js/{$type}/{$id}.js' rel='script'></script>" . PHP_EOL;
 
