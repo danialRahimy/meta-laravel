@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Meta\\": "src/Meta/"
+            "Meta\\": "src/"
         }
     }
 }
