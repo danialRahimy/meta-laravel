@@ -1,0 +1,22 @@
+{
+    "name": "danialrahimy/meta-laravel",
+    "description": "it's a package for managing css, js links ( add to html files ) in laravel project",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Danial Rahimy",
+            "email": "daniel_rahimi@outlook.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.3",
+        "laravel/framework": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Meta\\": "src/Meta/"
+        }
+    }
+}
