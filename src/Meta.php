@@ -146,6 +146,6 @@ class Meta
      */
     protected static function getJsMetaProd(string $type, string $id) : string
     {
-        return "<script src='/js/{$type}/{$id}.js' rel='script'></script>" . PHP_EOL;
+        return "<script defer src='/js/{$type}/{$id}.js' rel='script'></script>" . PHP_EOL;
     }
 }
