@@ -11,7 +11,33 @@ namespace Danialrahimy\MetaLaravel;
 
 class Meta
 {
-    const configPath = "/resources/etc/sourcesHtml.json";
+    protected static $configPath = '/resources/etc/sourcesHtml.json';
+    protected static $productionPrefix = '';
+    protected static $productionVersion = '1';
+
+    /**
+     * @param string $prefix
+     */
+    public static function setProductionPrefix(string $prefix)
+    {
+        self::$productionPrefix = $prefix;
+    }
+
+    /**
+     * @param string $version
+     */
+    public static function setProductionVersion(string $version)
+    {
+        self::$productionVersion = $version;
+    }
+
+    /**
+     * @param string $configPath
+     */
+    public static function setConfigPath(string $configPath)
+    {
+        self::$configPath = $configPath;
+    }
 
     /**
      * @return array
@@ -19,16 +45,16 @@ class Meta
      */
     protected static function getMetaConfig() : array
     {
-        $path = base_path() . self::configPath;
+        $path = base_path() . self::$configPath;
 
         if (!file_exists($path))
-            throw new MetaException("config file not found in " . $path);
+            throw new MetaException('config file not found in ' . $path);
 
         $data = file_get_contents($path);
         $data = json_decode($data, true);
 
-        if (isset($data["minify"]))
-            $data = $data["minify"];
+        if (isset($data['minify']))
+            $data = $data['minify'];
 
         return $data;
     }
@@ -56,12 +82,12 @@ class Meta
     public static function getCss(string $type, string $id)
     {
         $data = self::getMetaConfig();
-        $css = "";
-        $version = env("VERSION", "PROD");
+        $css = '';
+        $env = config('app.env', 'production');
 
-        if (isset($data[$type][$id]["css"])){
+        if (isset($data[$type][$id]['css'])){
 
-            if ($version === "dev")
+            if ($env === 'local')
                 $css = self::getCssMetaDev($data, $type, $id);
             else
                 $css = self::getCssMetaProd($type, $id);
@@ -79,12 +105,12 @@ class Meta
     public static function getJs(string $type, string $id)
     {
         $data = self::getMetaConfig();
-        $js = "";
-        $version = env("VERSION", "PROD");
+        $js = '';
+        $env = config('app.env', 'production');
 
-        if (isset($data[$type][$id]["js"])){
+        if (isset($data[$type][$id]['js'])){
 
-            if ($version === "dev")
+            if ($env === 'local')
                 $js = self::getJsMetaDev($data, $type, $id);
             else
                 $js = self::getJsMetaProd($type, $id);
@@ -101,9 +127,14 @@ class Meta
      */
     protected static function getCssMetaDev(array $data, string $type, string $id) : string
     {
-        $css = "";
+        $css = '';
 
-        foreach ($data[$type][$id]["css"] as $cssPath){
+        foreach ($data[$type]['general']['css'] as $cssPath){
+
+            $css .= "<link href='/{$cssPath}' rel='stylesheet'>" . PHP_EOL;
+        }
+
+        foreach ($data[$type][$id]['css'] as $cssPath){
 
             $css .= "<link href='/{$cssPath}' rel='stylesheet'>" . PHP_EOL;
         }
@@ -118,7 +149,7 @@ class Meta
      */
     protected static function getCssMetaProd(string $type, string $id) : string
     {
-        return "<link href='/css/{$type}/{$id}.css' rel='stylesheet'>" . PHP_EOL;
+        return '<link href=\'' . self::$productionPrefix . "/css/{$type}/{$id}.css?version=" . self::$productionVersion . '\' rel=\'stylesheet\'>' . PHP_EOL;
     }
 
     /**
@@ -129,9 +160,14 @@ class Meta
      */
     protected static function getJsMetaDev(array $data, string $type, string $id) : string
     {
-        $js = "";
+        $js = '';
 
-        foreach ($data[$type][$id]["js"] as $cssPath){
+        foreach ($data[$type]['general']['js'] as $cssPath){
+
+            $js .= "<script src='/{$cssPath}' rel='script'></script>" . PHP_EOL;
+        }
+
+        foreach ($data[$type][$id]['js'] as $cssPath){
 
             $js .= "<script src='/{$cssPath}' rel='script'></script>" . PHP_EOL;
         }
@@ -146,6 +182,6 @@ class Meta
      */
     protected static function getJsMetaProd(string $type, string $id) : string
     {
-        return "<script defer src='/js/{$type}/{$id}.js' rel='script'></script>" . PHP_EOL;
+        return '<script defer src=\'' . self::$productionPrefix . "/js/{$type}/{$id}.js?version=" . self::$productionVersion . '\' rel=\'script\'></script>' . PHP_EOL;
     }
 }
